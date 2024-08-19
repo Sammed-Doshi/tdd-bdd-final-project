@@ -3,19 +3,21 @@ echo "**************************************************"
 echo " Setting up TDD/BDD Final Project Environment"
 echo "**************************************************"
 
+# Homebrew: Install or update it if you don't have it already
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
 echo "*** Installing Python 3.9 and Virtual Environment"
-sudo apt-get update
-sudo DEBIAN_FRONTEND=noninteractive apt-get install -y python3.9 python3.9-venv
+brew install python@3.9
 
 echo "*** Making Python 3.9 the default..."
-sudo update-alternatives --remove-all python3
-sudo update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.9 1
+# Assuming you want to set it as default for the current shell session
+export PATH="/usr/local/opt/python@3.9/bin:$PATH" 
 
 echo "*** Checking the Python version..."
-python3 --version
+python3.9 --version
 
 echo "*** Creating a Python virtual environment"
-python3 -m venv ~/venv
+python3.9 -m venv ~/venv
 
 echo "*** Configuring the developer environment..."
 echo "# TDD/BDD Final Project additions" >> ~/.bashrc
@@ -23,12 +25,14 @@ echo "export GITHUB_ACCOUNT=$GITHUB_ACCOUNT" >> ~/.bashrc
 echo 'export PS1="\[\e]0;\u:\W\a\]${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u\[\033[00m\]:\[\033[01;34m\]\W\[\033[00m\]\$ "' >> ~/.bashrc
 echo "source ~/venv/bin/activate" >> ~/.bashrc
 
-echo "*** Installing Selenium and Chrome for BDD"
-sudo apt-get update
-sudo DEBIAN_FRONTEND=noninteractive apt-get install -y sqlite3 ca-certificates chromium-driver python3-selenium
+echo "*** Installing Selenium and Chrome for BDD" 
+
+brew install sqlite chromium chromedriver python-selenium
 
 echo "*** Installing Python depenencies..."
-source ~/venv/bin/activate && python3 -m pip install --upgrade pip wheel
+source ~/venv/bin/activate && python3.9 -m pip install --upgrade pip wheel
+# Install psycopg2 directly, bypassing the wheel build
+source ~/venv/bin/activate && pip install psycopg2-binary
 source ~/venv/bin/activate && pip install -r requirements.txt
 
 echo "*** Establishing .env file"
